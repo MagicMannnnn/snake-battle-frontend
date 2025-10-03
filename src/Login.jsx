@@ -6,7 +6,7 @@ import bycrpt from "bcryptjs";
 // Ignoring if username exists at the moment
 
 function Login({
-  setUsername, setLoggedIn, highscore, AIhighscore, setHighscore, AIsetHighscore
+  setUsername, loggedIn, setLoggedIn, highscore, AIhighscore, setHighscore, AIsetHighscore
 }) {
 
     const [printingUsername, setPrintingUsername] = useState("");
@@ -25,7 +25,6 @@ function Login({
     } 
     setPassword("");
     if (isMatch) {
-        setLoggedIn(true);
         setUsername(printingUsername);
         localStorage.setItem("username", printingUsername);
         setMessage("Login Successful");
@@ -33,19 +32,20 @@ function Login({
 
         const score = await UploadHandler.getScoreFromUsername(printingUsername);
 
-        if (score > highscore){
+        if (score > highscore || loggedIn){
             setHighscore(score);
             localStorage.setItem("highscore", score);
         }
 
-        const AIscore = await UploadHandler.getScoreFromUsername(printingUsername + "'s AI");
+        const AIscore = await UploadHandler.getScoreFromUsername("AI " + printingUsername);
 
-        if (AIscore > AIhighscore){
+        if (AIscore > AIhighscore || loggedIn){
             AIsetHighscore(AIscore);
             localStorage.setItem("AIhighscore", AIscore);
         }
 
         setPrintingUsername("");
+        setLoggedIn(true);
 
     }else {
         setLoggedIn(false);
@@ -61,20 +61,22 @@ function Login({
   }
 
   async function Signup() {
-
+    if (loggedIn){
+        await Login();
+    }
     setMessage("Must be at least 3 characters");
     if (printingUsername.trim("").length >= 3 && password.length >= 3){
         const hash = await bycrpt.hash(password, 10);
         const response = await UploadHandler.Signup(printingUsername, hash);
         console.log("response: ");
         if (response.ok) {
-            setLoggedIn(true);
             setUsername(printingUsername);
             localStorage.setItem("username", printingUsername);
             setMessage("Signup Successful");
             localStorage.setItem("message", "Signup Successful");
             setPrintingUsername("");   
             setPassword("");
+            setLoggedIn(true);
             return; 
         }
         else if (response.status == 409) {
@@ -118,7 +120,7 @@ function Login({
         </label>
 
         <label id='password'>
-          Password (NOT STORED SECURELY):
+          Password (not that secure):
           <input
             className='username'
             type="password"

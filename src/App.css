@@ -250,6 +250,7 @@ tbody td {
   font: inherit;
   color: inherit;
   position: absolute;
+  margin-right: 10px;
   right: 0%;
   transform: translateY(-90%);
 }
@@ -259,9 +260,11 @@ tbody td {
   font: inherit;
   color: inherit;
   position: absolute;
+  margin-left: 10px;
   left: 0%;
   transform: translateY(-90%);
 }
+  
 
 .goto-user {
   all: unset; 
@@ -269,8 +272,19 @@ tbody td {
   font: inherit;
   color: inherit;
   position: absolute;
+  margin-left: 10px;
   left: 0%;
   transform: translateY(40%);
+}
+
+.search-user {
+  all: unset; 
+  font: inherit;
+  color: inherit;
+  position: absolute;
+  right: 0%;
+  transform: translateY(40%);
+  margin-top: 10px;
 }
 
 

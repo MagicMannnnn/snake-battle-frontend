@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import './App.css'
 import { UploadHandler } from './uploadHandler'
 
-function Leaderboard() {
+function Leaderboard({ username }) {
     const itemsPerPage = 10;
 
     const navigate = useNavigate();
@@ -18,13 +18,35 @@ function Leaderboard() {
     const [sortType, setSortType] = useState(2); //1 username 2 score 3 date (- for reversed) : 0 to goto self
     const [page, setPage] = useState(0);
     const [entries, setEntries] = useState(0);
+    const [query, setQuery] = useState('');
+    const [message, setMessage] = useState('Enter a username to search');
 
 
     async function goToUser(){
-        const data = await UploadHandler.getScoresFromUsername("George", itemsPerPage);
+        const data = await UploadHandler.getScoresFromUsername(username, itemsPerPage);
         setPage(data);
         setSortType(2);
     }
+
+
+    async function handleKeyDown(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      if (query.trim() === '') {
+        setMessage('Enter a username to search');
+      } else {
+        const data = await UploadHandler.getScoresFromUsername(query.trim(""), itemsPerPage);
+        if (typeof data == "number"){
+            setPage(data);
+            setSortType(2);
+            setMessage(`found user ${query}`);
+        }else{
+            setMessage(`${query} not found`);
+        }
+        
+      }
+    }
+  }
 
 
     async function getNEntries() {
@@ -39,16 +61,19 @@ function Leaderboard() {
         if ((page + 1) * itemsPerPage < nPages){
             setPage(() => page + 1);
             getData(); 
+            setMessage('Enter a username to search');
         }
     }
     function decrementPage() {
         if (page > 0){
             setPage(page - 1);
+            setMessage('Enter a username to search');
         }
     }
 
 
     function handleSortTypeChange(type) {
+        setMessage('Enter a username to search');
         setPage(0);
         if (type == Math.abs(sortType)){ //reversed
             setSortType(sortType * -1);
@@ -121,6 +146,17 @@ function Leaderboard() {
                 <h1><button className='page-button' onClick={incrementPage}>▼</button></h1>
                 <h3><span  className='showing-entries'>Showing {page * itemsPerPage + 1}-{Math.min((page+1) * itemsPerPage, entries)} of {entries}</span></h3>
                 <h3><button className='goto-user' onClick={goToUser}>My Rank</button></h3>
+                <span className='search-user'>
+                    <input
+                    type="search"
+                    placeholder="Search..."
+                    value={query}
+                    onChange={e => setQuery(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="username"
+                    aria-label="Search"
+                /><br></br>{message}
+                </span>
             </div>
             
             

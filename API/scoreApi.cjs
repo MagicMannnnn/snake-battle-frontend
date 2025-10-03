@@ -40,6 +40,21 @@ function saveScoreToCSV(scoreObj) {
   fs.appendFileSync(CSV_PATH, line, 'utf-8');
 }
 
+async function saveScoresToCSV() {
+
+  const lines = scores.map(scoreObj => 
+    `${scoreObj.username},${scoreObj.score},${scoreObj.date.toISOString()}`
+  );
+
+  const csvContent = lines.join('\n') + '\n';
+  try {
+    await fs.promises.writeFile(CSV_PATH, csvContent, 'utf-8');
+    console.log('Scores saved to CSV');
+  } catch (err) {
+    console.error('Error writing CSV:', err);
+  }
+}
+
 // Load existing scores at startup
 loadScoresFromCSV();
 
@@ -124,16 +139,16 @@ app.post('/saveScore', (req, res) => {
     res.json({ message: 'better score already exists' });
     return;
   }
-
+  if (user) {
+    scores = scores.filter((element) => element.username != username);
+  }
   const newScore = { username, score, date: new Date() };
   scores.push(newScore);
 
-  try {
-    saveScoreToCSV(newScore);
-  } catch (err) {
+  saveScoresToCSV().catch(err => {
     console.error('Failed to save score to CSV:', err);
     return res.status(500).json({ error: 'Failed to save score' });
-  }
+  })
 
   res.json({ message: 'Score saved' });
 });

@@ -18,7 +18,7 @@ function speedToInterval(speed) {
   return Math.round(minInterval * Math.pow(maxInterval / minInterval, 1 - t));
 }
 
-function Home() {
+function Home({username, setUsername}) {
   const width = 20;
   const height = 20; 
 
@@ -27,7 +27,6 @@ function Home() {
   const [AIspeed, AIsetSpeed] = useState(localStorage.getItem("AIspeed") ?? 35);
   const [restart, setRestart] = useState(false);
 
-  const [username, setUsername] = useState(localStorage.getItem("username") ?? "");
   const [score, setScore] = useState(0);
   const [highscore, setHighscore] = useState(localStorage.getItem("highscore") ?? 0);
   const [alive, setAlive] = useState(false);
@@ -41,7 +40,7 @@ function Home() {
   const [AIshouldUploadScores, AIsetShouldUploadScores] = useState(localStorage.getItem("AIshouldUploadScores") === "true");
   const [uploadedPreviousScore, setUploadedPreviousScore] = useState(false);
   const [uploadedPreviousAIScore, setUploadedPreviousAIScore] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(username.length > 0);
 
 
 
@@ -110,7 +109,7 @@ function Home() {
       <h1>Snake <button className="battle-button" onClick={handleBattleClick}>Battle</button></h1>
     </div>
       <div className='container'>
-        <Settings roundness={roundness} setRoundness={setRoundness} speed={speed} setSpeed={setSpeed} AIspeed={AIspeed} AIsetSpeed={AIsetSpeed} autoRestart={autoRestart} setAutoRestart={setAutoRestart} shouldUploadScores={shouldUploadScores} setShouldUploadScores={setShouldUploadScores} AIshouldUploadScores={AIshouldUploadScores} AIsetShouldUploadScores={AIsetShouldUploadScores} username={username} setUsername={setUsername} highscore={highscore} AIhighscore={AIhighscore} setHighscore={setHighscore} setLoggedIn={setLoggedIn} AIsetHighscore={AIsetHighscore}/>
+        <Settings roundness={roundness} setRoundness={setRoundness} speed={speed} setSpeed={setSpeed} AIspeed={AIspeed} AIsetSpeed={AIsetSpeed} autoRestart={autoRestart} setAutoRestart={setAutoRestart} shouldUploadScores={shouldUploadScores} setShouldUploadScores={setShouldUploadScores} AIshouldUploadScores={AIshouldUploadScores} AIsetShouldUploadScores={AIsetShouldUploadScores} username={username} setUsername={setUsername} highscore={highscore} AIhighscore={AIhighscore} setHighscore={setHighscore} loggedIn={loggedIn} setLoggedIn={setLoggedIn} AIsetHighscore={AIsetHighscore}/>
         <HumanGame restart={restart} width={width} height={height} roundness={roundness} scoreHook={[score, setScore]} highscoreHook={[highscore, setHighscore]} aliveHook={[alive, setAlive]} speed={speedToInterval(speed)}/>
         <AIGame restart={restart} width={width} height={height} roundness={roundness} scoreHook={[AIscore, AIsetScore]} highscoreHook={[AIhighscore, AIsetHighscore]} aliveHook={[AIalive, AIsetAlive]} speed={speedToInterval(AIspeed)} autoRestart={autoRestart}/>
         <Stats score={score} AIscore={AIscore} alive={alive} AIalive={AIalive}/>

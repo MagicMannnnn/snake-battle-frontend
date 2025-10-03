@@ -15,7 +15,7 @@ function Settings({
   username, setUsername,
   highscore, AIhighscore,
   setHighscore, AIsetHighscore,
-  setLoggedIn
+  loggedIn, setLoggedIn
 }) {
   
 
@@ -97,7 +97,7 @@ function Settings({
       </h4>
 
 
-      <Login setUsername={setUsername} setLoggedIn={setLoggedIn} highscore={highscore} AIhighscore={AIhighscore} setHighscore={setHighscore} AIsetHighscore={AIsetHighscore}/>
+      <Login setUsername={setUsername} loggedIn={loggedIn} setLoggedIn={setLoggedIn} highscore={highscore} AIhighscore={AIhighscore} setHighscore={setHighscore} AIsetHighscore={AIsetHighscore}/>
 
 
     </div>
