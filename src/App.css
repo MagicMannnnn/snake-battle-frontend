@@ -277,6 +277,17 @@ tbody td {
   transform: translateY(40%);
 }
 
+.filter-button {
+  all: unset; 
+  cursor: grab;
+  font: inherit;
+  color: inherit;
+  position: absolute;
+  margin-left: 10px;
+  left: 10%;
+  transform: translateY(-90%);
+}
+
 .search-user {
   all: unset; 
   font: inherit;

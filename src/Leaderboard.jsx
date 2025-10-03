@@ -20,6 +20,7 @@ function Leaderboard({ username }) {
     const [entries, setEntries] = useState(0);
     const [query, setQuery] = useState('');
     const [message, setMessage] = useState('Enter a username to search');
+    const [filter, setFilter] = useState(0);
 
 
     async function goToUser(){
@@ -71,7 +72,6 @@ function Leaderboard({ username }) {
         }
     }
 
-
     function handleSortTypeChange(type) {
         setMessage('Enter a username to search');
         setPage(0);
@@ -109,6 +109,10 @@ function Leaderboard({ username }) {
         })();
     }, [scores]);
 
+    async function updateFilter(){
+        setFilter((e) => (e + 1) % 3);
+    }
+
     return (
         <>
             <div className='header-container'>
@@ -143,6 +147,7 @@ function Leaderboard({ username }) {
 
             <div className='footer-container'>
                 <h3><span  className='showing-pages'>Page {page + 1} of {Math.ceil(entries / itemsPerPage)}</span></h3>
+                <h3><button className='filter-button' onClick={updateFilter}>Filter: {filter == 0 ? "all" : filter == 1 ? "Human only" : "AI only"}</button></h3>
                 <h1><button className='page-button' onClick={incrementPage}>▼</button></h1>
                 <h3><span  className='showing-entries'>Showing {page * itemsPerPage + 1}-{Math.min((page+1) * itemsPerPage, entries)} of {entries}</span></h3>
                 <h3><button className='goto-user' onClick={goToUser}>My Rank</button></h3>

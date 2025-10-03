@@ -179,13 +179,27 @@ function sort(data, sortType) {
   return data;
 }
 
+function checkFilter(filter, element) {
+  if (filter == 0) {
+    return true;
+  }else if (filter == 1){
+    return "AI " != element.username.substring(0, 3);
+  }else{
+    return "AI " == element.username.substring(0, 3);
+  }
+}
+
 app.get('/scores', (req, res) => {
   const start = parseInt(req.query.start, 10);
   const end = parseInt(req.query.end, 10);
   const sortType = parseInt(req.query.sortType, 10);
+  //const filter = parseInt(req.query.filter, 10);
+  const filter = 0;
 
   if (!isNaN(start) && !isNaN(end) && !isNaN(sortType)) {
-    const filteredData = scores.filter((i) => i.score);
+    const filteredData = scores.filter((i) => {
+      return i.score && checkFilter(filter, i);
+  });
     const orderedDataByScore = filteredData.sort((a, b) => a.score == b.score ? 0 : -a.score + b.score);
     let lastScore = Infinity;
     let lastRank = 0;
@@ -245,7 +259,8 @@ app.get('/scoreFromUsername', (req, res) => {
 
 
 app.get('/entries', (req, res) => {
-  res.json(scores.length);
+  const filter = 0;
+  res.json(scores.filter((i) => checkFilter(filter, i)).length);
 });
 
 // ==========================
